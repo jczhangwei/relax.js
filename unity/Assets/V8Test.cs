@@ -1,5 +1,8 @@
 ﻿using V8.Net;
 using UnityEngine;
+using System;
+using UnityEngine.Assertions.Must;
+using System.Runtime.InteropServices;
 
 public class Person : V8NativeObject
 {
@@ -79,17 +82,22 @@ class V8Test
                             'isEnabled': true,
                             'staff': staff
                         };
+                        
                         return result;
                     };
                     return new myClassObject();
                 })();"
         );
 
+        v8Engine.RegisterType<Debug>(typeof(Debug).Name, true, ScriptMemberSecurity.Locked); // (this line is NOT required, but allows more control over the settings)
+        v8Engine.GlobalObject.SetProperty(typeof(Debug));
+
+
         //create parameter
         Handle day1 = v8Engine.CreateValue("1");
         Handle day2 = v8Engine.CreateValue("2");
         Handle day3 = v8Engine.CreateValue("3");
-
+        v8Engine.GlobalObject.SetProperty("zhangwei", v8Engine.CreateValue(DateTime.Now));
         var gs = v8Engine.GlobalObject.GetProperty("gs");
         var resultHandle = gs.Call("getCompanyInfo", null, day1, day2, day3); // NOTE: The object context is already known, so pass 'null' for '_this'.
         Company completion = v8Engine.GetObject<Company>(resultHandle);
@@ -107,7 +115,7 @@ class V8Test
 
         //  ==================================================================== OR  ====================================================================
 
-        v8Engine.RegisterType<Company2>(null, true, ScriptMemberSecurity.Locked); // (this line is NOT required, but allows more control over the settings)
+        v8Engine.RegisterType<Company2>(typeof(Company2).Name, true, ScriptMemberSecurity.Locked); // (this line is NOT required, but allows more control over the settings)
         v8Engine.GlobalObject.SetProperty(typeof(Company2)); // <= THIS IS IMPORTANT! It sets the type on the global object (though you can put this anywhere like any property)
 
         var gs2 = v8Engine.Execute(
@@ -116,6 +124,7 @@ class V8Test
                     myClassObject.prototype.getCompanyInfo = function (a, b, c) {
                         return new Company2(a, b, c);
                     };
+                    Debug.Log('ddddddd=');
                     return new myClassObject();
                 })();"
         );
@@ -123,6 +132,7 @@ class V8Test
         var resultHandle2 = gs2.Call("getCompanyInfo", null, day1, day2, day3); // NOTE: The object context is already known, so pass 'null' for '_this'.
         var objectBindingModeIfNeeded = resultHandle2.BindingMode;
         var ci2 = (Company2)resultHandle2.BoundObject; // (when a CLR class is bound, it is tracked by the handle in a special way)
+        Debug.Log(ci2.staff[0].name);
 
         //  =============================================================================================================================================
         // Take your pick. ;)

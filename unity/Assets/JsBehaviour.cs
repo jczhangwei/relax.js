@@ -7,16 +7,36 @@ using V8.Net;
 
 public class JsBehaviour : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public TextAsset jsScript;
+
+    internal static V8Engine engine = new V8Engine(); //all js behaviour shared one jsenv only!
+
+    private Handle jsBehaviour;
+
+    void Awake()
     {
-        var arg = new string[2];
-        V8Test.Main(arg);
+        engine.RegisterType<Debug>(null, true, ScriptMemberSecurity.Locked); // (this line is NOT required, but allows more control over the settings)
+        engine.GlobalObject.SetProperty(typeof(Debug));
+        engine.Execute(
+            @"
+                Debug.Log('dddd');
+              "
+            );
+        jsBehaviour = engine.Execute(jsScript.text);
     }
 
-    // Update is called once per frame
+    void Start()
+    {
+        jsBehaviour.InternalHandle.Call("Start", null);
+    }
+
     void Update()
     {
+        jsBehaviour.InternalHandle.Call("Update", null);
+    }
 
+    void OnDestroy()
+    {
+        jsBehaviour.InternalHandle.Call("OnDestroy", null);
     }
 }

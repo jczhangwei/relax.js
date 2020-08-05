@@ -308,7 +308,7 @@ GameObject:
   - component: {fileID: 2095400865}
   - component: {fileID: 2095400864}
   m_Layer: 0
-  m_Name: New Sprite
+  m_Name: JsBehaviourTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -326,6 +326,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3449b6b02a6edf74d812ee002918a0cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jsScript: {fileID: 4900000, guid: 52b034c455ecf474ea111b1ef545d786, type: 3}
 --- !u!212 &2095400865
 SpriteRenderer:
   m_ObjectHideFlags: 0

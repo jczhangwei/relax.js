@@ -1,0 +1,18 @@
+(function () {
+    return {
+
+        Start: function () {
+            Debug.Log("Call js Start");
+        },
+        
+        // Update is called once per frame
+        Update: function () {
+            Debug.Log("Call js Update");
+        },
+        
+        OnDestroy: function () {
+            Debug.Log("Call js OnDestroy");
+        }
+
+    };
+})();

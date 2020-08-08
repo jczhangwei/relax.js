@@ -17,10 +17,20 @@ public class JsBehaviour : MonoBehaviour
     {
         engine.RegisterType<Debug>(null, true, ScriptMemberSecurity.Locked); // (this line is NOT required, but allows more control over the settings)
         engine.GlobalObject.SetProperty(typeof(Debug));
+
+        engine.RegisterType(typeof(Vector2), null, true, ScriptMemberSecurity.Locked); // (this line is NOT required, but allows more control over the settings)
+        engine.GlobalObject.SetProperty(typeof(Vector2));
+        var v = Vector2.zero.ToString();
+
         engine.Execute(
             @"
                 Debug.Log('dddd');
-              "
+                Debug.Log(typeof Vector2);
+                for(var i = 0;i<100;i++){
+                    Vector2.zero.ToString();
+                }
+                Debug.Log(Vector2.zero);
+            "
             );
         jsBehaviour = engine.Execute(jsScript.text);
     }

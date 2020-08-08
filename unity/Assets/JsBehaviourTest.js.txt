@@ -7,7 +7,7 @@
         
         // Update is called once per frame
         Update: function () {
-            Debug.Log("Call js Update");
+            // Debug.Log("Call js Update");
         },
         
         OnDestroy: function () {
